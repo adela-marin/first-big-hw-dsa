@@ -3,15 +3,18 @@
 
 using namespace std;
 
+#define MAX_SEATS 5
+
 class FlightBookingSystem {
     public:
         LinkedList<string> *flights;
-        int maxSeats = 5;
+        int maxSeats = MAX_SEATS;
         int currentSeats = 0;
         int currentFlight = 0;
         int currentSeat = 0;
 
-        void bookSeat(string passengerName) {
+        void bookSeat(string passengerName) 
+        {
             if (currentSeats == maxSeats) {
                 flights->addLast(passengerName);
                 currentSeats = 1;
@@ -22,7 +25,8 @@ class FlightBookingSystem {
             }
         }
 
-        void cancelBooking(int seatIndex) {
+        void cancelBooking(int seatIndex) 
+        {
             Node<string> *p = flights->pfirst;
             Node<string> *prev = NULL;
             int i = 0;
@@ -43,8 +47,8 @@ class FlightBookingSystem {
             }
         }
 
-
-        void displaySystem() {
+        void displaySystem() 
+        {
             Node<string> *p = flights->pfirst;
             while (p != NULL) {
                 cout << p->info << endl;
@@ -52,7 +56,8 @@ class FlightBookingSystem {
             }
         }
 
-        string getPassenger(int seatIndex) {
+        string getPassenger(int seatIndex) 
+        {
             Node<string> *p = flights->pfirst;
             int i = 0;
             while (p != NULL) {
@@ -65,11 +70,13 @@ class FlightBookingSystem {
             return "";
         }
 
-        FlightBookingSystem() {
+        FlightBookingSystem() 
+        {
             flights = new LinkedList<string>();
         }
 
-        ~FlightBookingSystem() {
+        ~FlightBookingSystem() 
+        {
             delete flights;
         }
 
