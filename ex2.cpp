@@ -4,15 +4,15 @@
 
 using namespace std;
 
+ifstream fin("input.txt");
+ofstream fout("output.txt");
+
 struct Oasis {
     int water;
     int distanceToNext;
 };
 
 int main() {
-    ifstream fin("input.txt");
-    ofstream fout("output.txt");
-
     int n, consumptionRate;
     // fin >> n >> consumptionRate;
 
