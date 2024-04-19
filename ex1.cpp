@@ -79,7 +79,6 @@ class FlightBookingSystem {
         {
             delete flights;
         }
-
 };
 
 int main() 
