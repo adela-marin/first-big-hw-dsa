@@ -12,9 +12,9 @@ struct Oasis {
     int distanceToNext;
 };
 
-int main() {
+int main() 
+{
     int n, consumptionRate;
-    // fin >> n >> consumptionRate;
 
     while (!isdigit(fin.peek())) {
         fin.ignore(1);
@@ -30,7 +30,6 @@ int main() {
 
     for (int i = 0; i < n; i++) {
         Oasis o;
-        // fin >> o.water >> o.distanceToNext;
         while (!isdigit(fin.peek())) {
             fin.ignore(1);
         }
@@ -55,9 +54,7 @@ int main() {
 		}
 
 		queueInit.pop();
-
 		index++;
-
 		queueInit.push(queueAux.front());
 		queueAux.pop();
 	}
