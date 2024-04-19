@@ -12,22 +12,6 @@ class FlightBookingSystem {
         int currentSeat = 0;
 
         void bookSeat(string passengerName) {
-            // if (currentSeats == 0) {
-            //     flights->addFirst(passengerName);
-            //     currentSeats++;
-            // } else if (currentSeats == maxSeats) {
-            //     flights->addLast(passengerName);
-            //     currentSeats = 1;
-            //     currentFlight++;
-            // } else {
-            //     flights->addLast(passengerName);
-            //     currentSeats++;
-            // }
-
-            // if (currentFlight == 0) {
-            //     currentFlight++;
-            // }
-
             if (currentSeats == maxSeats) {
                 flights->addLast(passengerName);
                 currentSeats = 1;
@@ -36,7 +20,6 @@ class FlightBookingSystem {
                 flights->addLast(passengerName);
                 currentSeats++;
             }
-
         }
 
         void cancelBooking(int seatIndex) {
@@ -104,7 +87,6 @@ int main()
     // delete zboara;
 
     // test the flight booking system with data from the keyboard
-
     int option;
     string passengerName;
     int seatIndex;
@@ -139,7 +121,6 @@ int main()
         }
     }
 
-    
     return 0;
 }
 
