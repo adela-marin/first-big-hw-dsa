@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include "lablist.h"
 
 using namespace std;
@@ -13,8 +14,7 @@ public:
     int currentFlight = 0;
     int currentSeat = 0;
 
-    void bookSeat(string passengerName) 
-    {
+    void bookSeat(string passengerName) {
         if (currentSeats == maxSeats) {
             cout << "All seats are booked for this flight." << endl;
             return;
@@ -30,10 +30,7 @@ public:
         }
     }
 
-
-
-    void cancelBooking(int seatIndex) 
-    {
+    void cancelBooking(int seatIndex) {
         if (currentFlight == 0 || seatIndex >= currentSeats * currentFlight) {
             cout << "Invalid seat index." << endl << endl;
             return;
@@ -69,13 +66,9 @@ public:
         }
     }
 
-
-
-
-    void displaySystem() 
-    {
+    void displaySystem() {
         if (currentFlight == 0) {
-            cout << "No bookings." << endl << endl;
+            cout << "No bookings.\n" << endl << endl;
             return;
         }
 
@@ -87,10 +80,9 @@ public:
         cout << endl;
     }
 
-    string getPassenger(int seatIndex) 
-    {
+    string getPassenger(int seatIndex) {
         if (currentFlight == 0 || seatIndex >= currentSeats * currentFlight) {
-            return "Invalid seat index.";
+            return "Invalid seat index.\n";
         }
 
         Node<string> *p = flights->pfirst;
@@ -105,22 +97,19 @@ public:
         return "";
     }
 
-    FlightBookingSystem() 
-    {
+    FlightBookingSystem() {
         flights = new LinkedList<string>();
     }
 
-    ~FlightBookingSystem() 
-    {
+    ~FlightBookingSystem() {
         delete flights;
     }
 };
 
-int main() 
-{
+int main() {
     FlightBookingSystem *zboara = new FlightBookingSystem();
 
-    int option;
+    string optionStr;
     string passengerName;
     int seatIndex;
 
@@ -130,28 +119,45 @@ int main()
         cout << "3. Display system\n";
         cout << "4. Exit\n";
         cout << "Option: ";
-        cin >> option;
 
-        switch (option) {
-        case 1:
-            cout << "Passenger name: ";
+        getline(cin, optionStr);
+
+        stringstream ss(optionStr);
+        int actualOption;
+        if (ss >> actualOption) {
+            switch (actualOption) {
+            case 1:
+                cout << "Passenger name: ";
+                getline(cin, passengerName);
+                zboara->bookSeat(passengerName);
+                break;
+            case 2:
+                cout << "Seat index: ";
+                cin >> seatIndex;
+                // cin.ignore();
+                if (cin.fail()) {
+                    cout << "Invalid input\n\n";
+                    cin.clear();
+                    cin.ignore();
+                    break;
+                }
+                cin.ignore();
+                cin.clear();
+                zboara->cancelBooking(seatIndex);
+                break;
+            case 3:
+                zboara->displaySystem();
+                break;
+            case 4:
+                delete zboara;
+                return 0;
+            default:
+                cout << "Invalid option\n\n";
+                return 0;
+            }
+        } else {
+            cout << "Invalid input\n\n";
             cin.ignore();
-            getline(cin, passengerName);
-            zboara->bookSeat(passengerName);
-            break;
-        case 2:
-            cout << "Seat index: ";
-            cin >> seatIndex;
-            zboara->cancelBooking(seatIndex);
-            break;
-        case 3:
-            zboara->displaySystem();
-            break;
-        case 4:
-            delete zboara;
-            return 0;
-        default:
-            cout << "Invalid option\n\n";
         }
     }
 
