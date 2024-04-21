@@ -3,6 +3,9 @@
 #include <stack>
 #include <vector>
 
+#define INT_MAX 2147483647
+#define INT_MIN -2147483648
+
 using namespace std;
 
 ifstream in("input.txt");
@@ -17,41 +20,76 @@ class Calculator {
 	private:
 		stack<char> expressionStack;
 		vector<Pair> v;
-
 	public:
 		void readinput()
 		{
 			string line;
 			while (in >> line) {
-				if (line[0] != '(') {
+				if (line[0] != '(' && line[0] != ')') {
 					char letter;
-					int nr = 0, i = 2, sgn = 1, length = line.length();
+					int i = 2, sgn = 1, length = line.length();
+					long long nr = 0;
 					if (isupper(line[0])) letter = line[0];
 					else out << "The letter " << line[0] << " is invalid.", exit(0);
-					if(line[1] != '=') out << "The operator " << line[1] << " is invalid.", exit(0);
-					if(line[i] == '-') i++, sgn = -1;
+					if (line[1] != '=') out << "The operator " << line[1] << " is invalid.", exit(0);
+					if (line[i] == '-') i++, sgn = -1;
 					if (!isdigit(line[i])) out << line[i] << " is not an integer.", exit(0);
-					for(; i < length; i++) {
-						nr = nr * 10 + (line[i] - '0');
+					for (; i < length; i++) {
+						if (isdigit(line[i])) nr = nr * 10 + (line[i] - '0');
+						else out << "Value is not an integer", exit(0);
 					}
 					nr *= sgn;
-					v.push_back({letter, nr});
+					if (nr < INT_MIN || nr > INT_MAX) out << "Value is not an integer.", exit(0);
+					v.push_back({letter, (int)nr});
 				}
 				else {
+					stack<char> st;
+					for (auto i : line) {
+						if ((!isupper(i) || !isalpha(i)) && i != '(' && i != ')' && i != '+' && i != '-' && i != '*' && i != '/' && i != '%') {
+							out << "The operator " << i << " is invalid.", exit(0);
+						}
+					}
+						
+					for (auto i : line) {
+						if (isalpha(i)) {
+							continue;
+						}
+						else if (i == '(') {
+							st.push('(');
+						}
+						else if (!st.empty()) {
+							if (i == ')') {
+								st.pop();
+							}
+						}
+						else {
+							out << "Parentheses are not valid.", exit(0);
+						}
+					}
+						
+					if (!st.empty()) {
+						out << "Parentheses are not valid.", exit(0);
+					}	
+					for (auto i = line.begin(); i != line.end() - 1; i++) {
+						if (*i == '(' && *(i + 1) == ')') {
+							out << "Parentheses are misplaced.", exit(0);
+						}	
+					}
+						
 					for(auto i : line) {
 						expressionStack.push(i);
-					}	
-				}	
+					}
+				}
 			}
 		}
 
 		int execute()
 		{
-			char letter='z';
-			while(!expressionStack.empty() && expressionStack.top() == ')') {
+			char letter = 'z';
+			while (!expressionStack.empty() && expressionStack.top() == ')') {
 				stack<char> auxStack;
 				string expression;
-				while(!expressionStack.empty() && expressionStack.top() != '(') {
+				while (!expressionStack.empty() && expressionStack.top() != '(') {
 					auxStack.push(expressionStack.top());
 					expressionStack.pop();
 				}
@@ -61,7 +99,13 @@ class Calculator {
 					auxStack.pop();
 				}
 				auxStack.pop();
-				v.push_back({letter, evaluate(expression)});
+				if(expression.length() > 2) {
+					v.push_back({letter, evaluate(expression)});
+				}
+				else {
+					return v[v.size()-1].value;
+				}
+					
 				expressionStack.push(letter);
 				letter--;
 				while(!auxStack.empty()) {
@@ -69,7 +113,7 @@ class Calculator {
 					auxStack.pop();
 				}
 			}
-			return v[v.size()-1].value;
+			return v[v.size() - 1].value;
 		}
 
 		int evaluate(string exp)
@@ -82,34 +126,64 @@ class Calculator {
 				found = false;
 				for (int i = 0; i < exp.length(); i++) {
 					char sgn;
-					if (exp[i] == '*' || exp[i] == '/' || exp[i] == '%') {
-						int nr1 = 0, nr2 = 0, s = 0;
+					if(exp[i] == '*' || exp[i] == '/' || exp[i] == '%') {
+						long long nr1 = 0, nr2 = 0, s = 0;
 						bool found1 = false, found2 = false;
 						sgn = exp[i];
 						found = true;
 						for (int j = 0; j < aux.size(); j++) {
-							if (aux[j].variable == exp[i - 1]) nr1 = aux[j].value, found1 = true;
-							if (aux[j].variable == exp[i+1]) nr2 = aux[j].value, found2 = true;	
+							if (aux[j].variable == exp[i - 1]) {
+								nr1 = aux[j].value;
+								found1 = true;
+							}
+							if (aux[j].variable == exp[i + 1]) {
+								nr2 = aux[j].value;
+								found2 = true;
+							}
 						}
 						for (int j = 0; j < v.size(); j++) {
-							if(!nr1 && v[j].variable == exp[i - 1]) nr1 = v[j].value, found1 = true;
-							if(!nr2 && v[j].variable == exp[i + 1]) nr2 = v[j].value, found2 = true;
+							if (!nr1 && v[j].variable == exp[i - 1]) {
+								nr1 = v[j].value;
+								found1 = true;
+							}
+							if (!nr2 && v[j].variable == exp[i + 1]) {
+								nr2 = v[j].value;
+								found2 = true;
+							}
 						}
-						if (!found1) out << "The letter " << exp[i - 1] << " was not defined.", exit(0);
-						if (!found2) out << "The letter " << exp[i + 1] << " was not defined.", exit(0);
-						if(sgn == '*') s = nr1 * nr2;
-						else if(sgn == '/') {
-							if(nr2 == 0) out << "Division by zero.", exit(0);
+						if (!found1) {
+							out << "The letter " << exp[i - 1] << " was not defined.";
+							exit(0);
+						}
+						if (!found2) {
+							out << "The letter " << exp[i + 1] << " was not defined.";
+							exit(0);
+						}
+						if (sgn == '*') {
+							s = nr1 * nr2;
+						}
+						else if (sgn == '/') {
+							if (nr2 == 0) {
+								out << "Division by zero.";
+								exit(0);
+							}
 							s = nr1 / nr2;
 						}
 						else {
-							if(nr2 == 0) out << "Module by zero.", exit(0);
+							if (nr2 == 0) {
+								out << "Module by zero.";
+								exit(0);
+							}
 							s = nr1 % nr2;
 						}
-						aux.push_back({letter, s});
+						if (s < INT_MIN || s > INT_MAX) {
+							out << "Value is not an integer.";
+							exit(0);
+						}
+						aux.push_back({letter, (int)s});
 						exp[i - 1] = letter;
 						letter++;
-						for(int j = i; j < exp.length() - 2; j++) {
+						for (int j = i; j < exp.length() - 2; j++) {
 							exp[j] = exp[j + 2];
 						}
 						exp.resize(exp.length() - 2);
@@ -117,27 +191,52 @@ class Calculator {
 					}
 				}
 			}
-			while(exp.length() > 1) {
-				for(int i = 0; i < exp.length(); i++) {
+			while (exp.length() > 1) {
+				for (int i = 0; i < exp.length(); i++) {
 					char sgn;
-					if(exp[i] == '+' || exp[i] == '-') {
-						int nr1 = 0, nr2 = 0, s = 0;
+					if (exp[i] == '+' || exp[i] == '-') {
+						long long nr1 = 0, nr2 = 0, s = 0;
 						bool found1 = false, found2 = false;
 						sgn = exp[i];
-						for(int j = 0; j < aux.size(); j++) {
-							if(aux[j].variable == exp[i - 1]) nr1 = aux[j].value, found1 = true;
-							if(aux[j].variable == exp[i + 1]) nr2 = aux[j].value, found2 = true;
+						for (int j = 0; j < aux.size(); j++) {
+							if (aux[j].variable == exp[i - 1]) {
+								nr1 = aux[j].value;
+								found1 = true;
+							}
+							if(aux[j].variable == exp[i + 1]) {
+								nr2 = aux[j].value;
+								found2 = true;
+							}
 						}
 						for(int j = 0; j < v.size(); j++) {
-							if(!nr1 && v[j].variable == exp[i - 1]) nr1 = v[j].value, found1 = true;
-							if(!nr2 && v[j].variable == exp[i + 1])
-								nr2 = v[j].value, found2 = true;
+							if(!nr1 && v[j].variable == exp[i - 1]) {
+								nr1 = v[j].value;
+								found1 = true;
+							}
+							if(!nr2 && v[j].variable == exp[i + 1]) {
+								nr2 = v[j].value;
+								found2 = true;
+							}
 						}
-						if(!found1) out << "The letter " << exp[i - 1] << " was not defined.", exit(0);
-						if(!found2) out << "The letter " << exp[i + 1] << " was not defined.", exit(0);
-						if(sgn == '+') s = nr1 + nr2;
-						else s = nr1 - nr2;
-						aux.push_back({letter, s});
+						if(!found1) {
+							out << "The letter " << exp[i - 1] << " was not defined.";
+							exit(0);
+						}
+						if(!found2) {
+							out << "The letter " << exp[i + 1] << " was not defined.";
+							exit(0);
+						}
+						if(sgn == '+') {
+							s = nr1 + nr2;
+						}
+						else {
+							s = nr1 - nr2;
+						}
+						if (s < INT_MIN || s > INT_MAX) {
+							out << "Value is not an integer.";
+							exit(0);
+						}
+						aux.push_back({letter, (int)s});
 						exp[i - 1] = letter;
 						letter++;
 						for(int j = i; j < exp.length() - 2; j++) {
@@ -148,10 +247,11 @@ class Calculator {
 					}
 				}
 			}
-			for(int i = 0; i < aux.size(); i++) {
-				if(aux[i].variable == exp[0]) return aux[i].value;
+			for (int i = 0; i < aux.size(); i++) {
+				if (aux[i].variable == exp[0]) {
+					return aux[i].value;
+				}
 			}
-
 			return 0;
 		}
 
@@ -168,9 +268,5 @@ int main()
     Calculator calc;
     calc.readinput();
     calc.writeOutput();
-
-	in.close();
-	out.close();
-
     return 0;
 }
