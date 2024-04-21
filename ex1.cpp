@@ -6,93 +6,115 @@ using namespace std;
 #define MAX_SEATS 5
 
 class FlightBookingSystem {
-    public:
-        LinkedList<string> *flights;
-        int maxSeats = MAX_SEATS;
-        int currentSeats = 0;
-        int currentFlight = 0;
-        int currentSeat = 0;
+public:
+    LinkedList<string> *flights;
+    int maxSeats = MAX_SEATS;
+    int currentSeats = 0;
+    int currentFlight = 0;
+    int currentSeat = 0;
 
-        void bookSeat(string passengerName) 
-        {
-            if (currentSeats == maxSeats) {
-                flights->addLast(passengerName);
-                currentSeats = 1;
-                currentFlight++;
-            } else {
-                flights->addLast(passengerName);
-                currentSeats++;
-            }
+    void bookSeat(string passengerName) 
+    {
+        if (currentSeats == maxSeats) {
+            cout << "All seats are booked for this flight." << endl;
+            return;
         }
 
-        void cancelBooking(int seatIndex) 
-        {
-            Node<string> *p = flights->pfirst;
-            Node<string> *prev = NULL;
-            int i = 0;
-            while (p != NULL) {
-                if (i == seatIndex) {
-                    if (prev == NULL) {
-                        flights->pfirst = p->next;
-                    } else {
-                        prev->next = p->next;
-                    }
-                    delete p;
-                    currentSeats--;
-                    return;
+        if (currentSeats == 0) {
+            flights->addLast(passengerName);
+            currentSeats = 1;
+            currentFlight++;
+        } else {
+            flights->addLast(passengerName);
+            currentSeats++;
+        }
+    }
+
+
+
+    void cancelBooking(int seatIndex) 
+    {
+        if (currentFlight == 0 || seatIndex >= currentSeats * currentFlight) {
+            cout << "Invalid seat index." << endl << endl;
+            return;
+        }
+
+        Node<string> *p = flights->pfirst;
+        Node<string> *prev = NULL;
+        int i = 0;
+        while (p != NULL) {
+            if (i == seatIndex) {
+                if (prev == NULL) {
+                    flights->pfirst = p->next;
+                } else {
+                    prev->next = p->next;
                 }
-                prev = p;
-                p = p->next;
-                i++;
-            }
-        }
-
-        void displaySystem() 
-        {
-            Node<string> *p = flights->pfirst;
-            while (p != NULL) {
-                cout << p->info << endl;
-                p = p->next;
-            }
-        }
-
-        string getPassenger(int seatIndex) 
-        {
-            Node<string> *p = flights->pfirst;
-            int i = 0;
-            while (p != NULL) {
-                if (i == seatIndex) {
-                    return p->info;
+                delete p;
+                currentSeats--;
+                Node<string> *q = flights->pfirst;
+                while (q != NULL) {
+                    q = q->next;
+                    i++;
                 }
-                p = p->next;
-                i++;
+                currentFlight = (i + 1) / maxSeats;
+                return;
             }
-            return "";
+            prev = p;
+            p = p->next;
+            i++;
+        }
+    }
+
+
+
+    void displaySystem() 
+    {
+        if (currentFlight == 0) {
+            cout << "No bookings." << endl << endl;
+            return;
         }
 
-        FlightBookingSystem() 
-        {
-            flights = new LinkedList<string>();
+        Node<string> *p = flights->pfirst;
+        while (p != NULL) {
+            cout << p->info << endl;
+            p = p->next;
+        }
+        cout << endl;
+    }
+
+    string getPassenger(int seatIndex) 
+    {
+        if (currentFlight == 0 || seatIndex >= currentSeats * currentFlight) {
+            return "Invalid seat index.";
         }
 
-        ~FlightBookingSystem() 
-        {
-            delete flights;
+        Node<string> *p = flights->pfirst;
+        int i = 0;
+        while (p != NULL) {
+            if (i == seatIndex) {
+                return p->info;
+            }
+            p = p->next;
+            i++;
         }
+        return "";
+    }
+
+    FlightBookingSystem() 
+    {
+        flights = new LinkedList<string>();
+    }
+
+    ~FlightBookingSystem() 
+    {
+        delete flights;
+    }
 };
 
 int main() 
 {
     FlightBookingSystem *zboara = new FlightBookingSystem();
-    // zboara->bookSeat("Sergiu");
-    // zboara->bookSeat("Ana");
-    // zboara->displaySystem();
-    // cout << zboara->getPassenger(0) << endl;
-    // zboara->cancelBooking(0);
-    // zboara->displaySystem();
-    // delete zboara;
 
-    // test the flight booking system with data from the keyboard
     int option;
     string passengerName;
     int seatIndex;
@@ -106,28 +128,27 @@ int main()
         cin >> option;
 
         switch (option) {
-            case 1:
-                cout << "Passenger name: ";
-                cin >> passengerName;
-                zboara->bookSeat(passengerName);
-                break;
-            case 2:
-                cout << "Seat index: ";
-                cin >> seatIndex;
-                zboara->cancelBooking(seatIndex);
-                break;
-            case 3:
-                zboara->displaySystem();
-                break;
-            case 4:
-                delete zboara;
-                return 0;
-            default:
-                cout << "Invalid option" << endl;
+        case 1:
+            cout << "Passenger name: ";
+            cin.ignore();
+            getline(cin, passengerName);
+            zboara->bookSeat(passengerName);
+            break;
+        case 2:
+            cout << "Seat index: ";
+            cin >> seatIndex;
+            zboara->cancelBooking(seatIndex);
+            break;
+        case 3:
+            zboara->displaySystem();
+            break;
+        case 4:
+            delete zboara;
+            return 0;
+        default:
+            cout << "Invalid option" << endl << endl;
         }
     }
 
     return 0;
 }
-
-
