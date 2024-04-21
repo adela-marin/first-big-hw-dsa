@@ -20,17 +20,31 @@ public:
             return;
         }
 
+        // if (currentSeats == 0) {
+        //     flights->addLast(passengerName);
+        //     currentSeats = 1;
+        //     currentFlight++;
+        // } else {
+        //     flights->addLast(passengerName);
+        //     currentSeats++;
+        // }
+
         if (currentSeats == 0) {
-            flights->addLast(passengerName);
+            flights->addFirst(passengerName);
             currentSeats = 1;
-            currentFlight++;
+            currentFlight = 1;
+            cout << "Seat booked successfully.\n\n";
         } else {
             flights->addLast(passengerName);
             currentSeats++;
+            currentFlight = (currentSeats + maxSeats - 1) / maxSeats;
+            cout << "Seat booked successfully.\n\n";
         }
+
     }
 
-    void cancelBooking(int seatIndex) {
+    void cancelBooking(int seatIndex) 
+    {
         if (currentFlight == 0 || seatIndex >= currentSeats * currentFlight) {
             cout << "Invalid seat index." << endl << endl;
             return;
@@ -48,15 +62,17 @@ public:
                 }
                 delete p;
                 currentSeats--;
-                Node<string> *q = flights->pfirst;
-                int remainingBookings = 0;
-                while (q != NULL) {
-                    q = q->next;
-                    remainingBookings++;
+
+                int totalBookings = currentSeats * currentFlight;
+
+                currentFlight = (totalBookings + maxSeats - 1) / maxSeats;
+                currentSeats = totalBookings % maxSeats;
+                if (currentSeats == 0 && totalBookings != 0) {
+                    currentSeats = maxSeats;
                 }
-                currentFlight = (remainingBookings + maxSeats - 1) / maxSeats;
-                if (remainingBookings == 0) {
+                if (totalBookings == 0) {
                     currentFlight = 0;
+                    currentSeats = 0;
                 }
                 return;
             }
@@ -65,6 +81,10 @@ public:
             i++;
         }
     }
+
+
+
+
 
     void displaySystem() {
         if (currentFlight == 0) {
