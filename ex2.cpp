@@ -1,66 +1,99 @@
 #include <iostream>
 #include <fstream>
-#include <queue>
+#include <vector>
+#include <algorithm>
+#include "queue2.h"
 
 using namespace std;
 
-ifstream fin("input.txt");
-ofstream fout("output.txt");
+ifstream in("input.txt");
+ofstream out("output.txt");
 
 struct Oasis {
     int water;
     int distanceToNext;
 };
 
-int main() 
+bool cond(Oasis a, Oasis b)
 {
-    int n, consumptionRate;
+    return a.water < b.water;
+}
 
-    while (!isdigit(fin.peek())) {
-        fin.ignore(1);
+int main()
+{
+    int n, consumptionRate, result;
+    bool found = false;
+    vector<Oasis> v(100);
+    
+    while (!isdigit(in.peek())) {
+        in.ignore(1);
     }
-    fin >> n;
-    while (!isdigit(fin.peek())) {
-        fin.ignore(1);
+    in >> n;
+    while (!isdigit(in.peek())) {
+        in.ignore(1);
     }
-    fin >> consumptionRate;
+    in >> consumptionRate;
 
-    queue<Oasis> queueInit;
-    queue<Oasis> queueAux;
+    if (n == 0 || n == 1 || consumptionRate == 0 || consumptionRate == 1 || consumptionRate > 100 || n > 100 || n < 0 || consumptionRate < 0) {
+        out << "Not possible";
+        return 0;
+    }
+
+    QueueCirc<Oasis> queueInit(n);
+    QueueCirc<Oasis> queueAux(n);
 
     for (int i = 0; i < n; i++) {
-        Oasis o;
-        while (!isdigit(fin.peek())) {
-            fin.ignore(1);
+        while(!isdigit(in.peek())) {
+            in.ignore(1);
         }
-        fin >> o.water;
-        while (!isdigit(fin.peek())) {
-            fin.ignore(1);
+        in >> v[i].water;
+        while(!isdigit(in.peek())) {
+            in.ignore(1);
         }
-        fin >> o.distanceToNext;
-
-        queueInit.push(o);
-        queueAux.push(o);
+        in >> v[i].distanceToNext;
+    }
+    v.resize(n);
+    sort(v.begin(), v.end(), cond);
+    for (auto i : v) {
+        queueInit.enqueue({i.water, i.distanceToNext});
+        queueAux.enqueue({i.water, i.distanceToNext});
+    }
+    for (int i = 0; i < n && !found; i++) {
+        int w = queueInit.peek().water, nrnext = queueInit.peek().distanceToNext;
+        for (int j = 0; j < n && !found; j++) {
+            int D = 100 * w / consumptionRate;
+            queueAux.dequeue();
+            if (queueAux.isEmpty()) {
+                found = true;
+            }
+            else if (D < queueAux.peek().distanceToNext) {
+                break;
+            }
+        }
+        if (found) {
+            result = w;
+        }
+        queueInit.dequeue();
+        queueInit.enqueue({w, nrnext});
+        while (!queueAux.isEmpty()) {
+            queueAux.dequeue();
+        }
+        for (int j = 0; j < n; j++) {
+            int auxwater = queueInit.peek().water, auxdistance = queueInit.peek().distanceToNext;
+            queueAux.enqueue({auxwater, auxdistance});
+            queueInit.dequeue();
+            queueInit.enqueue({auxwater, auxdistance});
+        }
+    }
+    if(!found) {
+        out << "Not possible";
+    }
+    else {
+        out << result << " is the oasis from where we can start our journey";
     }
 
-    int index = 1;
-	while (!queueInit.empty()) {
-		int w = queueInit.front().water;
-		int d = queueInit.front().distanceToNext;
-
-		if (100 * w / consumptionRate < d) {
-			fout << index << " is the oasis from where we can start our journey";
-			return 0;
-		}
-
-		queueInit.pop();
-		index++;
-		queueInit.push(queueAux.front());
-		queueAux.pop();
-	}
-
-    fin.close();
-    fout.close();
+    in.close();
+    out.close();
 
     return 0;
 }
