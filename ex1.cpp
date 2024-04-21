@@ -30,8 +30,6 @@ public:
         }
     }
 
-
-
     void cancelBooking(int seatIndex) 
     {
         if (currentFlight == 0 || seatIndex >= currentSeats * currentFlight) {
@@ -51,7 +49,6 @@ public:
                 }
                 delete p;
                 currentSeats--;
-                // Re-indexing seats after cancellation
                 Node<string> *q = flights->pfirst;
                 int remainingBookings = 0;
                 while (q != NULL) {
@@ -60,7 +57,7 @@ public:
                 }
                 currentFlight = (remainingBookings + maxSeats - 1) / maxSeats;
                 if (remainingBookings == 0) {
-                    currentFlight = 0; // Reset currentFlight if there are no remaining bookings
+                    currentFlight = 0;
                 }
                 return;
             }
@@ -70,13 +67,10 @@ public:
         }
     }
 
-
-
-
     void displaySystem() 
     {
         if (currentFlight == 0) {
-            cout << "No bookings." << endl << endl;
+            cout << "No bookings.\n" << endl << endl;
             return;
         }
 
@@ -91,7 +85,7 @@ public:
     string getPassenger(int seatIndex) 
     {
         if (currentFlight == 0 || seatIndex >= currentSeats * currentFlight) {
-            return "Invalid seat index.";
+            return "Invalid seat index.\n";
         }
 
         Node<string> *p = flights->pfirst;
@@ -126,10 +120,10 @@ int main()
     int seatIndex;
 
     while (true) {
-        cout << "1. Book a seat" << endl;
-        cout << "2. Cancel booking" << endl;
-        cout << "3. Display system" << endl;
-        cout << "4. Exit" << endl;
+        cout << "1. Book a seat\n";
+        cout << "2. Cancel booking\n";
+        cout << "3. Display system\n";
+        cout << "4. Exit\n";
         cout << "Option: ";
         cin >> option;
 
@@ -152,7 +146,7 @@ int main()
             delete zboara;
             return 0;
         default:
-            cout << "Invalid option" << endl << endl;
+            cout << "Invalid option\n\n";
         }
     }
 
