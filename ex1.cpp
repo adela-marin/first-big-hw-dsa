@@ -30,6 +30,8 @@ public:
         }
     }
 
+
+
     void cancelBooking(int seatIndex) 
     {
         if (currentFlight == 0 || seatIndex >= currentSeats * currentFlight) {
@@ -67,10 +69,13 @@ public:
         }
     }
 
+
+
+
     void displaySystem() 
     {
         if (currentFlight == 0) {
-            cout << "No bookings.\n" << endl << endl;
+            cout << "No bookings." << endl << endl;
             return;
         }
 
@@ -85,7 +90,7 @@ public:
     string getPassenger(int seatIndex) 
     {
         if (currentFlight == 0 || seatIndex >= currentSeats * currentFlight) {
-            return "Invalid seat index.\n";
+            return "Invalid seat index.";
         }
 
         Node<string> *p = flights->pfirst;
