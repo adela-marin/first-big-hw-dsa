@@ -51,12 +51,17 @@ public:
                 }
                 delete p;
                 currentSeats--;
+                // Re-indexing seats after cancellation
                 Node<string> *q = flights->pfirst;
+                int remainingBookings = 0;
                 while (q != NULL) {
                     q = q->next;
-                    i++;
+                    remainingBookings++;
                 }
-                currentFlight = (i + 1) / maxSeats;
+                currentFlight = (remainingBookings + maxSeats - 1) / maxSeats;
+                if (remainingBookings == 0) {
+                    currentFlight = 0; // Reset currentFlight if there are no remaining bookings
+                }
                 return;
             }
             prev = p;
@@ -64,6 +69,7 @@ public:
             i++;
         }
     }
+
 
 
 
