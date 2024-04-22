@@ -46,12 +46,20 @@ IV. Input
 		4. Exit: Terminate the program.
 	The user interacts with the system by selecting one of these options repeatedly until choosing to exit.
 
-V. Example
-	1. Bookings are initially empty.
-	2. bookSeat("Sergiu") adds Sergiu to the first flight.
-	3. bookSeat("Ana") adds Ana to the same flight as Sergiu.
-	4. displaySystem() shows the booking status across all flights.
-	5. getPassenger(0) returns "Sergiu".
-	6. cancelBooking(0) removes Sergiu from the first flight, shifts Ana to the first seat, and moves subsequent bookings accordingly.
-	7. displaySystem() reflects the updated booking status.
+	Example
+		1. Bookings are initially empty.
+		2. bookSeat("Matei") adds Matei to the first flight.
+		3. bookSeat("Alex") adds Alex to the same flight as Alex.
+		4. displaySystem() shows the booking status across all flights.
+		5. getPassenger(0) returns "Matei".
+		6. cancelBooking(0) removes Matei from the first flight, shifts Alex to the first seat, and moves subsequent bookings accordingly.
+		7. displaySystem() reflects the updated booking status.
+
+V. Edge cases
+	- if the user wants to cancel a seat which was not booked
+	- if the user wants to book more seats then the number of available seats
+
+Note
+	There are 2 solutions provided, in one of them being used a singly linked list, and in the other a doubly linked list.
+
 	
