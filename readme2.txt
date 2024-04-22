@@ -41,6 +41,7 @@ IV. Input
 		The number of oases in the desert.
 		The consumption rate of water during the journey.
 		Information about each oasis, including water availability and distance to the next oasis.
+	The information are provided using a file named "input.txt"
 
 V. Example
 
