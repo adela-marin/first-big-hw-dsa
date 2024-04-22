@@ -61,7 +61,8 @@ int main()
     for (int i = 0; i < n && !found; i++) {
         int w = queueInit.peek().water, nrnext = queueInit.peek().distanceToNext;
         for (int j = 0; j < n && !found; j++) {
-            int D = 100 * w / consumptionRate;
+            // int D = 100 * w / consumptionRate;
+            int D = 100 * queueAux.peek().water / consumptionRate;
             queueAux.dequeue();
             if (queueAux.isEmpty()) {
                 found = true;
