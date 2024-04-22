@@ -7,146 +7,129 @@ using namespace std;
 
 #define MAX_SEATS 5
 
-class FlightBookingSystem
-{
-private:
+class FlightBookingSystem {
+	private:
+		int maxflights, NrOfPassengers;
+		vector<LinkedList <string>*> flights;
+	public:
+		FlightBookingSystem (int NrOfFlights)
+		{
+			maxflights = NrOfFlights;
+			if (maxflights != 0) {
+				LinkedList<string> *newList = new LinkedList<string>();
+				for (int j = 0; j < MAX_SEATS; j++) {
+					newList->addLast("");
+				}
+				flights.push_back(newList);
+			}
+			else {
+				cout << "There are no planes.", exit(0);
+			}
+		}
 
-    int maxflights, NrOfPassengers;
-    vector <LinkedList <string> *> flights;
+		void AddNewFlight()
+		{
+			LinkedList<string> *newList = new LinkedList<string>();
+			for (int j = 0; j < MAX_SEATS; j++) {
+				newList->addLast("");
+			}
+			flights.push_back(newList);
+		}
 
-public:
+		void bookSeat (string passengerName)
+		{
+			Node<string> *current = flights[flights.size() - 1]->pfirst;
+			int cnt = 0;
+			while (current && current->info != "") {
+				cnt++;
+				current = current->next;
+			}
+			if (flights.size() == maxflights && cnt == MAX_SEATS) {
+				cout << "All flights are fully booked. Cannot book seat for " << passengerName << endl;
+			}
+			else if (cnt == 5) {
+				AddNewFlight();
+				Node<string> *add=flights[flights.size() - 1]->pfirst;
+				add->info = passengerName;
+				NrOfPassengers++;
+			}
+			else {
+				current->info = passengerName;
+				NrOfPassengers++;
+			}
+		}
 
-    FlightBookingSystem (int NrOfFlights)
-    {
-        maxflights=NrOfFlights;
-        if(maxflights!=0)
-        {
-            LinkedList <string> *newList=new LinkedList <string>();
-            for(int j=0; j<MAX_SEATS; j++)
-                newList->addLast("");
-            flights.push_back(newList);
-        }
-        else
-            cout << "There are no planes.", exit(0);
-    }
+		void cancelBooking(int seatIndex)
+		{
+			if (seatIndex < 0 || seatIndex > NrOfPassengers - 1) {
+				cout << "Invalid seat index.";
+				return;
+			}
+			else {
+				int flight = seatIndex / MAX_SEATS, seat = seatIndex % MAX_SEATS, cnt = 0;
+				Node<string> *current = flights[flight]->pfirst;
+				while (current && cnt != seat) {
+					cnt++;
+					current = current->next;
+				}
+				Node<string> *aux = current;
+				if (flight == flights.size() - 1) {
+					while (current && current->next) {
+						current = current->next;
+						aux->info = current->info;
+						aux = aux->next;
+					}
+					current->info = "";
+				}
+				else {
+					while (flight < flights.size() - 1) {
+						while(current && current->next) {
+							current = current->next;
+							aux->info = current->info;
+							aux = aux->next;
+						}
+						flight++;
+						current = flights[flight]->pfirst;
+						aux->info = current->info;
+						aux = current;
+					}
+					while(current && current->next) {
+						current = current->next;
+						aux->info = current->info;
+						aux = aux->next;
+					}
+					current->info="";
+				}
+				NrOfPassengers--;
+			}
+		}
 
-    void AddNewFlight()
-    {
-        LinkedList <string> *newList=new LinkedList <string>();
-        for(int j=0; j<MAX_SEATS; j++)
-            newList->addLast("");
-        flights.push_back(newList);
-    }
+		void displaySystem()
+		{
+			for (int i = 0; i < flights.size(); i++, cout << endl) {
+				Node<string> *current = flights[i]->pfirst;
+				while (current) {
+					cout << current->info << " ";
+					current = current->next;
+				}
+			}
+		}
 
-    void bookSeat (string passengerName)
-    {
-        Node <string> *current=flights[flights.size()-1]->pfirst;
-        int cnt=0;
-        while(current && current->info!="")
-        {
-            cnt++;
-            current=current->next;
-        }
-        if(flights.size()==maxflights && cnt==MAX_SEATS)
-            cout << "All flights are fully booked. Cannot book seat for " << passengerName << endl;
-        else if(cnt==5)
-        {
-            AddNewFlight();
-            Node <string> *add=flights[flights.size()-1]->pfirst;
-            add->info=passengerName;
-            NrOfPassengers++;
-        }
-        else
-        {
-            current->info=passengerName;
-            NrOfPassengers++;
-        }
-    }
-
-    void cancelBooking(int seatIndex)
-    {
-        if(seatIndex<0 || seatIndex>NrOfPassengers-1)
-        {
-            cout << "Invalid seat index.";
-            return;
-        }
-        else
-        {
-            int flight=seatIndex/MAX_SEATS, seat=seatIndex%MAX_SEATS, cnt=0;
-            Node <string> *current=flights[flight]->pfirst;
-            while(current && cnt!=seat)
-            {
-                cnt++;
-                current=current->next;
-            }
-            Node <string> *aux=current;
-            if(flight==flights.size()-1)
-            {
-                while(current && current->next)
-                {
-                    current=current->next;
-                    aux->info=current->info;
-                    aux=aux->next;
-                }
-                current->info="";
-            }
-            else
-            {
-                while(flight<flights.size()-1)
-                {
-                    while(current && current->next)
-                    {
-                        current=current->next;
-                        aux->info=current->info;
-                        aux=aux->next;
-                    }
-                    flight++;
-                    current=flights[flight]->pfirst;
-                    aux->info=current->info;
-                    aux=current;
-                }
-                while(current && current->next)
-                {
-                    current=current->next;
-                    aux->info=current->info;
-                    aux=aux->next;
-                }
-                current->info="";
-            }
-
-            NrOfPassengers--;
-        }
-    }
-
-    void displaySystem()
-    {
-        for(int i=0; i<flights.size(); i++, cout << endl)
-        {
-            Node <string> *current=flights[i]->pfirst;
-            while(current)
-            {
-                cout << current->info <<" ";
-                current=current->next;
-            }
-        }
-    }
-
-    string getPassenger(int seatIndex)
-    {
-        if(seatIndex<0 || seatIndex>NrOfPassengers-1)
-            return "Invalid seat index.";
-        else
-        {
-            int flight=seatIndex/MAX_SEATS, seat=seatIndex%MAX_SEATS, cnt=0;
-            Node <string> *current=flights[flight]->pfirst;
-            while(current && cnt!=seat)
-            {
-                cnt++;
-                current=current->next;
-            }
-            return current->info;
-        }
-    }
+		string getPassenger(int seatIndex)
+		{
+			if (seatIndex < 0 || seatIndex > NrOfPassengers - 1) {
+				return "Invalid seat index.";
+			}
+			else {
+				int flight = seatIndex / MAX_SEATS, seat = seatIndex % MAX_SEATS, cnt = 0;
+				Node<string> *current = flights[flight]->pfirst;
+				while (current && cnt != seat) {
+					cnt++;
+					current = current->next;
+				}
+				return current->info;
+			}
+		}
 
 };
 
