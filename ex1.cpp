@@ -14,20 +14,13 @@ public:
     int currentFlight = 0;
     int currentSeat = 0;
 
-    void bookSeat(string passengerName) {
+
+    void bookSeat(string passengerName) 
+    {
         if (currentSeats == maxSeats) {
-            cout << "All seats are booked for this flight." << endl;
+            cout << "All seats are booked for this flight.\n";
             return;
         }
-
-        // if (currentSeats == 0) {
-        //     flights->addLast(passengerName);
-        //     currentSeats = 1;
-        //     currentFlight++;
-        // } else {
-        //     flights->addLast(passengerName);
-        //     currentSeats++;
-        // }
 
         if (currentSeats == 0) {
             flights->addFirst(passengerName);
@@ -40,7 +33,6 @@ public:
             currentFlight = (currentSeats + maxSeats - 1) / maxSeats;
             cout << "Seat booked successfully.\n\n";
         }
-
     }
 
     void cancelBooking(int seatIndex) 
@@ -81,9 +73,6 @@ public:
             i++;
         }
     }
-
-
-
 
 
     void displaySystem() {
