@@ -155,15 +155,16 @@ public:
         int seatInFlight = seatIndex % MAX_SEATS;
         Node<string>* current = currentFlight->pfirst;
 
-        for (int i = 0; i < seatInFlight; ++i) {
+        for (int i = 0; i < seatInFlight; i++) {
             if (!current) {
                 return "Invalid seat index.";
             }
             current = current->next;
         }
-        
-        return current ? current->info : "Invalid seat index.";
+
+        return (current && current->info != "") ? current->info : "Not booked";
     }
+
 };
 
 int main() {
@@ -182,6 +183,10 @@ int main() {
         getline(cin, optionStr);
         stringstream ss(optionStr);
         int actualOption;
+
+        int seatIndex;
+        string passenger = "";
+
         if (ss >> actualOption) {
             switch (actualOption) {
                 case 1:
@@ -190,7 +195,7 @@ int main() {
                     zboara.bookSeat(passengerName);
                     break;
                 case 2:
-                    int seatIndex;
+                    // int seatIndex;
                     cout << "Seat index: ";
                     cin >> seatIndex;
                     cin.ignore();
@@ -201,9 +206,19 @@ int main() {
                     break;
                 case 4:
                     // int seatIndex;
-                    cout << "Passenger on seat ";
+                    cout << "Seat index ";
                     cin >> seatIndex;
-                    cout << " is " << zboara.getPassenger(seatIndex) << "\n";
+                    cin.ignore();
+                    // string passenger = zboara.getPassenger(seatIndex);
+                    passenger = zboara.getPassenger(seatIndex);
+                    if (passenger == "Not booked") {
+                        cout << "Seat " << seatIndex << " is not booked.\n";
+                    } else if (passenger != "Invalid seat index.") {
+                        cout << "Passenger on seat " << seatIndex << " is " << passenger << "\n";
+                    } else {
+                        cout << "Invalid seat index.\n";
+                    }
+                    // cout << " is " << zboara.getPassenger(seatIndex) << "\n";
                     break;
                 case 5:
                    return 0;
