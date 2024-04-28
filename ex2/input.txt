@@ -1,0 +1,6 @@
+The number of oasis: 3
+The consumption rate: 5
+Oasis water and distance to next:
+1 25
+10 15
+3 20
