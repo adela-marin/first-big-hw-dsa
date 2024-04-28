@@ -6,6 +6,7 @@ This homework consists in three exercises as it follows.
 Flight Booking System
 
 I. Introduction
+
 The Flight Booking System is designed to efficiently manage the booking and cancellation of seats across multiple flights for a small airline. 
 It utilizes a custom data structure implemented using linked lists.
 
@@ -33,6 +34,7 @@ II. Methods
 		- Returns the name of the passenger booked at the global seat index seatIndex.
 
 III. Example Operations
+
 	1. Booking a Seat:
 		If there are available seats on the current flight, the system adds the passenger's name to the next available seat.
 		If the current flight is fully booked, the system creates a new flight and adds the passenger's name to the first seat of this new flight.
@@ -44,6 +46,7 @@ III. Example Operations
 		Given a seat index, the system returns the name of the passenger booked at that seat across all flights.
 
 IV. Input 
+
 	The input for this flight booking system consists of user-selected options from a menu displayed in the console:
 		1. Book a seat: Prompt the user to enter the passenger's name to book a seat.
 		2. Cancel booking: Prompt the user to enter the seat index to cancel the booking for that seat.
@@ -61,22 +64,25 @@ IV. Input
 		7. displaySystem() reflects the updated booking status.
 
 V. Edge cases
+
 	- if the user wants to cancel a seat which was not booked
 	- if the user wants to book more seats then the number of available seats
 
 Note
+
 	There are 2 solutions provided, in one of them being used a singly linked list, and in the other a doubly linked list.
 
 
 #ex2
-
 Oasis Journey through Desert
 
 I. Introduction
+
 	The Oasis Journey through Desert program aims to help travelers identify the optimal starting oasis for a journey across a vast desert. 
 	With limited water reserves in their vehicle, travelers must strategically choose the starting point to ensure they can complete the journey without running out of water before reaching subsequent oases.
 
 II. Methods
+
 	Input:
 		Reads input data from an external file ("input.txt").
 		Parses the number of oases and the consumption rate for water during the journey.
@@ -96,6 +102,7 @@ II. Methods
 		Outputs an error message if the journey is not possible due to invalid input parameters.
 
 III. Example Operations
+
 	Journey Initialization:
 		The program initializes the journey by reading the input data, including the number of oases and the consumption rate of water during the journey.
 	Finding Optimal Starting Oasis:
@@ -109,6 +116,7 @@ III. Example Operations
 		If the journey is not possible due to invalid input parameters (such as zero or negative values for the number of oases or the consumption rate), the program outputs an error message.
 
 IV. Input
+
 	The input for this program consists of:
 		The number of oases in the desert.
 		The consumption rate of water during the journey.
@@ -130,10 +138,10 @@ V. Example
 
 
 #ex3
-
 Calculator
 
 I. Introduction
+
 	The Calculator program emulates a calculator using a stack. It reads input from a file ("input.txt") and prints the output to another file ("output.txt").
 
 	The program consists of the following components:
@@ -141,6 +149,7 @@ I. Introduction
 		Calculator: The main class responsible for initializing the calculator and executing operations.
 
 II. Classes and Methods
+
 	Pair
 		Attributes: variable (char) and value (int).
 	Calculator
@@ -154,6 +163,7 @@ II. Classes and Methods
 			writeOutput(): Writes the result to the output file.
 
 III. Input
+
 	The input file ("input.txt") contains variable declarations followed by a single left-handed expression that uses the variables within parentheses. 
 	Possible operators include addition (+), subtraction (-), multiplication (*), division (/), and modulo (%). 
 	Variable names range from A to Z, followed by '=' and an integer value.
@@ -164,6 +174,7 @@ III. Input
 		(A+B-A)
 
 IV. Error Handling
+
 	The program handles various error scenarios, including:
 		- invalid operators
 		- invalid numerical values and/or variable names
@@ -171,6 +182,7 @@ IV. Error Handling
 		- division by zero
 
 VI. Edge Cases
+
 	The most important edge cases for this program are presented below.
 	For the following cases, the output consists in a corresponding message
 	1. for defining the variables
