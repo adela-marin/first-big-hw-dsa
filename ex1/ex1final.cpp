@@ -10,9 +10,8 @@ using namespace std;
 
 class FlightBookingSystem {
 private:
-    vector
-    <LinkedList<string>*> flights;
-    vector<int> passengersPerFlight; // Track number of passengers per flight
+    vector<LinkedList<string>*> flights;
+    vector<int> passengersPerFlight;
 
 public:
     FlightBookingSystem(int NrOfFlights) {
@@ -21,27 +20,28 @@ public:
             return;
         }
 
-        // Initialize flights and passengersPerFlight vectors
+        // initializare vectori
         flights.resize(NrOfFlights);
         passengersPerFlight.resize(NrOfFlights, 0);
 
-        // Initialize each flight with empty seats
-        for (int i = 0; i < NrOfFlights; ++i) {
+        // initializare listele de pasageri pentru fiecare zbor
+        for (int i = 0; i < NrOfFlights; i++) {
             LinkedList<string>* newList = new LinkedList<string>();
-            for (int j = 0; j < MAX_SEATS; ++j) {
+            for (int j = 0; j < MAX_SEATS; j++) {
                 newList->addLast("");
             }
             flights[i] = newList;
         }
     }
 
+    // rezervare loc
     void bookSeat(string passengerName) {
         int flightIndex = 0;
         while (flightIndex < flights.size()) {
             LinkedList<string>* currentFlight = flights[flightIndex];
             int availableSeats = MAX_SEATS - passengersPerFlight[flightIndex];
             if (availableSeats > 0) {
-                // Book the seat in this flight
+                // rezervare primul loc disponibil
                 Node<string>* current = currentFlight->pfirst;
                 while (current && current->info != "") {
                     current = current->next;
@@ -58,187 +58,83 @@ public:
         cout << "All flights are fully booked." << endl;
     }
 
-    // void cancelBooking(int seatIndex) {
-	// 	int flightIndex = seatIndex / MAX_SEATS;
-	// 	if (flightIndex >= flights.size()) {
-	// 		cout << "Invalid seat index." << endl;
-	// 		return;
-	// 	}
-	// 	LinkedList<string>* currentFlight = flights[flightIndex];
-	// 	int seatInFlight = seatIndex % MAX_SEATS;
-	// 	Node<string>* current = currentFlight->pfirst;
-	// 	Node<string>* prev = nullptr;
-	// 	for (int i = 0; i < seatInFlight; ++i) {
-	// 		if (!current) {
-	// 			cout << "Invalid seat index." << endl;
-	// 			return;
-	// 		}
-	// 		prev = current;
-	// 		current = current->next;
-	// 	}
-	// 	if (current && current->info != "") {
-	// 		current->info = "";
-	// 		--passengersPerFlight[flightIndex];
-	// 		cout << "Booking canceled for seat " << seatIndex << endl;
-	// 		while (current && current->next) {
-	// 			current->info = current->next->info;
-	// 			prev = current;
-	// 			current = current->next;
-	// 		}
-	// 		if (prev) {
-	// 			prev->info = ""; // Clear the last seat
-	// 		}
-	// 	} else {
-	// 		cout << "No booking found for seat " << seatIndex << endl;
-	// 	}
-	// }
-
-
-	// void cancelBooking(int seatIndex) {
-	// 	if (seatIndex < 0 || seatIndex >= flights.size() * MAX_SEATS) {
-	// 		cout << "Invalid seat index." << endl;
-	// 		return;
-	// 	}
-
-	// 	int flightIndex = seatIndex / MAX_SEATS;
-	// 	int seatInFlight = seatIndex % MAX_SEATS;
-	// 	LinkedList<string>* currentFlight = flights[flightIndex];
-	// 	Node<string>* current = currentFlight->pfirst;
-	// 	Node<string>* prev = nullptr;
-
-	// 	for (int i = 0; i < seatInFlight; ++i) {
-	// 		if (!current) {
-	// 			cout << "Invalid seat index." << endl;
-	// 			return;
-	// 		}
-	// 		prev = current;
-	// 		current = current->next;
-	// 	}
-
-	// 	if (current && current->info != "") {
-	// 		current->info = "";
-	// 		--passengersPerFlight[flightIndex];
-	// 		cout << "Booking canceled for seat " << seatIndex << endl;
-
-	// 		Node<string>* temp = current->next;
-	// 		while (temp) {
-	// 			current->info = temp->info;
-	// 			current = temp;
-	// 			temp = temp->next;
-	// 		}
-	// 		current->info = ""; // Clear the last seat
-
-	// 		for (int i = flightIndex; i < flights.size() - 1; ++i) {
-	// 			LinkedList<string>* nextFlight = flights[i + 1];
-	// 			if (passengersPerFlight[i + 1] > 0) {
-	// 				// Move the first passenger from the next flight to fill the gap
-	// 				current = nextFlight->pfirst;
-	// 				while (current->info == "") {
-	// 					current = current->next;
-	// 				}
-
-	// 				temp = currentFlight->pfirst;
-	// 				while (temp->info != "") {
-	// 					temp = temp->next;
-	// 				}
-	// 				temp->info = current->info;
-	// 				current->info = "";
-	// 				--passengersPerFlight[i + 1];
-	// 				++passengersPerFlight[i];
-	// 			}
-	// 			temp = nextFlight->pfirst;
-	// 			Node<string>* prevTemp = nullptr;
-	// 			while (temp && temp->info != "") {
-	// 				if (prevTemp) {
-	// 					prevTemp->info = temp->info;
-	// 				}
-	// 				prevTemp = temp;
-	// 				temp = temp->next;
-	// 			}
-	// 			if (prevTemp) {
-	// 				prevTemp->info = ""; // Clear the last seat
-	// 			}
-	// 		}
-	// 	} else {
-	// 		cout << "No booking found for seat " << seatIndex << endl;
-	// 	}
-	// }
-
-
+    // anulare rezervare
 	void cancelBooking(int seatIndex) {
-    if (seatIndex < 0 || seatIndex >= flights.size() * MAX_SEATS) {
-        cout << "Invalid seat index." << endl;
-        return;
-    }
-
-    int flightIndex = seatIndex / MAX_SEATS;
-    int seatInFlight = seatIndex % MAX_SEATS;
-    LinkedList<string>* currentFlight = flights[flightIndex];
-    Node<string>* current = currentFlight->pfirst;
-    Node<string>* prev = nullptr;
-
-    for (int i = 0; i < seatInFlight; ++i) {
-        if (!current) {
+        if (seatIndex < 0 || seatIndex >= flights.size() * MAX_SEATS) {
             cout << "Invalid seat index." << endl;
             return;
         }
-        prev = current;
-        current = current->next;
-    }
 
-    if (current && current->info != "") {
-        current->info = "";
-        --passengersPerFlight[flightIndex];
-        cout << "Booking canceled for seat " << seatIndex << endl;
+        int flightIndex = seatIndex / MAX_SEATS;
+        int seatInFlight = seatIndex % MAX_SEATS;
+        LinkedList<string>* currentFlight = flights[flightIndex];
+        Node<string>* current = currentFlight->pfirst;
+        Node<string>* prev = nullptr;
 
-        Node<string>* temp = current->next;
-        while (temp) {
-            current->info = temp->info;
-            current = temp;
-            temp = temp->next;
+        // cautare loc
+        for (int i = 0; i < seatInFlight; i++) {
+            if (!current) {
+                cout << "Invalid seat index." << endl;
+                return;
+            }
+            prev = current;
+            current = current->next;
         }
-        current->info = "";
 
-        for (int i = flightIndex; i < flights.size() - 1; ++i) {
-            LinkedList<string>* nextFlight = flights[i + 1];
-            if (passengersPerFlight[i + 1] > 0) {
-                current = nextFlight->pfirst;
-                while (current->info == "") {
-                    current = current->next;
+        // anulare rezervare
+        if (current && current->info != "") {
+            current->info = "";
+            // decrementare numar pasageri
+            --passengersPerFlight[flightIndex];
+            cout << "Booking canceled for seat " << seatIndex << endl;
+
+            Node<string>* temp = current->next;
+            while (temp) {
+                current->info = temp->info;
+                current = temp;
+                temp = temp->next;
+            }
+            current->info = "";
+
+            // mutare pasageri ca sa nu ramana locuri libere intre ei
+            for (int i = flightIndex; i < flights.size() - 1; i++) {
+                LinkedList<string>* nextFlight = flights[i + 1];
+
+                if (passengersPerFlight[i + 1] > 0) {
+                    current = nextFlight->pfirst;
+                    while (current->info == "") {
+                        current = current->next;
+                    }
+                    temp = currentFlight->pfirst;
+                    while (temp->info != "") {
+                        temp = temp->next;
+                    }
+                    temp->info = current->info;
+                    current->info = "";
+                    --passengersPerFlight[i + 1];
+                    ++passengersPerFlight[i];
                 }
-                temp = currentFlight->pfirst;
-                while (temp->info != "") {
+
+                Node<string>* temp = current->next;
+
+                while (temp) {
+                    current->info = temp->info;
+                    current = temp;
                     temp = temp->next;
                 }
-                temp->info = current->info;
                 current->info = "";
-                --passengersPerFlight[i + 1];
-                ++passengersPerFlight[i];
             }
-			Node<string>* temp = current->next;
-			while (temp) {
-				current->info = temp->info;
-				current = temp;
-				temp = temp->next;
-			}
-			current->info = "";
+        } else {
+            cout << "No booking found for seat " << seatIndex << endl;
         }
-    } else {
-        cout << "No booking found for seat " << seatIndex << endl;
     }
-}
 
-
-
-
-
-
-
-
+    // afisare status
     void displaySystem() {
-        for (int i = 0; i < flights.size(); ++i) {
+        for (int i = 0; i < flights.size(); i++) {
             cout << "Flight " << (i + 1) << ": ";
             Node<string>* current = flights[i]->pfirst;
+
             while (current) {
                 cout << (current->info.empty() ? "-" : current->info) << " ";
                 current = current->next;
@@ -247,20 +143,25 @@ public:
         }
     }
 
+    // afisare pasager de la pozitia data
     string getPassenger(int seatIndex) {
         int flightIndex = seatIndex / MAX_SEATS;
+
         if (flightIndex >= flights.size()) {
             return "Invalid seat index.";
         }
+
         LinkedList<string>* currentFlight = flights[flightIndex];
         int seatInFlight = seatIndex % MAX_SEATS;
         Node<string>* current = currentFlight->pfirst;
+
         for (int i = 0; i < seatInFlight; ++i) {
             if (!current) {
                 return "Invalid seat index.";
             }
             current = current->next;
         }
+        
         return current ? current->info : "Invalid seat index.";
     }
 };
