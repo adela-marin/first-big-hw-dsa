@@ -143,34 +143,61 @@ class Calculator {
 			char letter = 'a';
 			bool found = true;
 			vector<Pair> aux;
-			if (exp[0]=='-') {
-			    int nr0 = 0;
-			    bool found0 = false;
-			    for (int j = 0; j < aux.size(); j++) {
-                    if (aux[j].variable == exp[1]) {
-                        nr0 = aux[j].value;
-                        found0 = true;
+			// if (exp[0]=='-') {
+			//     int nr0 = 0;
+			//     bool found0 = false;
+			//     for (int j = 0; j < aux.size(); j++) {
+            //         if (aux[j].variable == exp[1]) {
+            //             nr0 = aux[j].value;
+            //             found0 = true;
+            //         }
+            //     }
+            //     for (int j = 0; j < v.size(); j++) {
+            //         if (!nr0 && v[j].variable == exp[1]) {
+            //             nr0 = v[j].value;
+            //             found0 = true;
+            //         }
+            //     }
+            //     if (!found0) {
+            //         out << "The letter " << exp[1] << " was not defined.";
+            //         exit(0);
+            //     }
+            //     nr0 = -nr0;
+            //     aux.push_back({letter, (int)nr0});
+            //     exp[0] = letter;
+            //     letter++;
+            //     for (int j = 1; j < exp.length() - 1; j++) {
+            //             exp[j] = exp[j + 1];
+            //     }
+            //     exp.resize(exp.length() - 1);
+			// }
+			for (auto i = exp.begin(); i != exp.end() - 1; i++) {
+                if (isalpha(*i) && isalpha(*(i + 1))) {
+                    out << "Invalid expression.", exit(0);
+                }
+            }
+            if (exp[0] == '-') {
+                int nr=0;
+                for (int i = 0; i < aux.size(); i++) {
+                    if (aux[i].variable == exp[1]) {
+                        nr = aux[i].value;
                     }
                 }
-                for (int j = 0; j < v.size(); j++) {
-                    if (!nr0 && v[j].variable == exp[1]) {
-                        nr0 = v[j].value;
-                        found0 = true;
+                for (int i = 0; i < v.size(); i++) {
+                    if (!nr && v[i].variable == exp[1]) {
+                        nr = v[i].value;
                     }
                 }
-                if (!found0) {
-                    out << "The letter " << exp[1] << " was not defined.";
-                    exit(0);
-                }
-                nr0 = -nr0;
-                aux.push_back({letter, (int)nr0});
+                nr=-nr;
+                aux.push_back({letter, (int)nr});
                 exp[0] = letter;
                 letter++;
                 for (int j = 1; j < exp.length() - 1; j++) {
-                        exp[j] = exp[j + 1];
+                    exp[j] = exp[j + 1];
                 }
                 exp.resize(exp.length() - 1);
-			}
+
+            }
 			while (found) {
 				found = false;
 				for (int i = 0; i < exp.length(); i++) {
